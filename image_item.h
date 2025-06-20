@@ -1,5 +1,10 @@
 #ifndef IMAGE_ITEM_H
-#pragma once
+#define IMAGE_ITEM_H
+
+#include <vector>
+#include <iostream>
+#include <glibmm/refptr.h>
+#include <gdkmm/pixbuf.h>
 #include <filesystem> // C++17, but widely used with C++20
 namespace fs = std::filesystem;
 
@@ -64,4 +69,4 @@ struct ImageItem {
         std::cout << "----------------------" << std::endl;
     }
 };
-#endif //IMAGE_ITEM_H
+#endif // IMAGE_ITEM_H
