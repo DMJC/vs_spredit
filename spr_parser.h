@@ -1,5 +1,15 @@
+#ifndef SPR_PARSER_H
+#define SPR_PARSER_H
+
 #include <filesystem> // C++17, but widely used with C++20
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <map>
+#include <vector>
+#include <memory>
+#include <iostream>
+#include <cctype>
 #include "image_item.h"
 
 namespace fs = std::filesystem;
@@ -283,3 +293,4 @@ std::shared_ptr<ImageItem> load_spr_file(const std::string& filename, const fs::
 
     return item;
 }
+#endif // SPR_PARSER_H
