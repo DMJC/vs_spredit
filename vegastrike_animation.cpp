@@ -278,15 +278,50 @@ public:
     void on_input_changed() {
         auto img = drawing_area.selected_image;
         if (!img) return;
-            img->x = std::stod(x_entry.get_text());
-            img->y = std::stod(y_entry.get_text());
-			if (std::stod(xscale_entry.get_text()) == 0){ 
-				img->scale_x = 0.1; return;}
-			if (std::stod(yscale_entry.get_text()) == 0){ 
-				img->scale_y = 0.1; return;}
-           	img->scale_x = std::stod(xscale_entry.get_text());
-           	img->scale_y = std::stod(yscale_entry.get_text());
-           	drawing_area.queue_draw();
+
+        const std::string x_str = x_entry.get_text();
+        if (is_double(x_str)) {
+            img->x = std::stod(x_str);
+        } else {
+            std::cerr << "Warning: Invalid X value '" << x_str
+                      << "'. Keeping previous value." << std::endl;
+        }
+
+        const std::string y_str = y_entry.get_text();
+        if (is_double(y_str)) {
+            img->y = std::stod(y_str);
+        } else {
+            std::cerr << "Warning: Invalid Y value '" << y_str
+                      << "'. Keeping previous value." << std::endl;
+        }
+
+        const std::string xscale_str = xscale_entry.get_text();
+        if (is_double(xscale_str)) {
+            double val = std::stod(xscale_str);
+            if (val == 0) {
+                img->scale_x = 0.1;
+            } else {
+                img->scale_x = val;
+            }
+        } else {
+            std::cerr << "Warning: Invalid X scale '" << xscale_str
+                      << "'. Keeping previous value." << std::endl;
+        }
+
+        const std::string yscale_str = yscale_entry.get_text();
+        if (is_double(yscale_str)) {
+            double val = std::stod(yscale_str);
+            if (val == 0) {
+                img->scale_y = 0.1;
+            } else {
+                img->scale_y = val;
+            }
+        } else {
+            std::cerr << "Warning: Invalid Y scale '" << yscale_str
+                      << "'. Keeping previous value." << std::endl;
+        }
+
+        drawing_area.queue_draw();
     }
 
     void on_image_selected() {
