@@ -1,6 +1,9 @@
 build:
 	g++ -std=c++20 vegastrike_animation.cpp -o vs_spredit `pkg-config gtkmm-3.0 cairomm-1.0 --cflags --libs`
-test:
+
+test: test.cpp
 	g++ -std=c++20 test.cpp -o test `pkg-config gtkmm-3.0 cairomm-1.0 --cflags --libs`
+	./test
+
 clean:
-	rm vs_spredit
+	rm -f vs_spredit test

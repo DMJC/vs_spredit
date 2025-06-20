@@ -1,6 +1,10 @@
 #ifndef IMAGE_ITEM_H
 #pragma once
 #include <filesystem> // C++17, but widely used with C++20
+#include <gtkmm.h>
+#include <vector>
+#include <memory>
+#include <iostream>
 namespace fs = std::filesystem;
 
 struct ImageItem {
