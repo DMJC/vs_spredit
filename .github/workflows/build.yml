@@ -1,0 +1,21 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y gtkmm-3.0 cairomm-1.0
+      - name: Build
+        run: make
+      - name: Archive vs_spredit
+        uses: actions/upload-artifact@v3
+        with:
+          name: vs_spredit
+          path: vs_spredit
