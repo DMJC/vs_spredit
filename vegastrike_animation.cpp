@@ -4,6 +4,7 @@
 #include <memory>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include "image_item.h"
 #include "spr_parser.h"
 
