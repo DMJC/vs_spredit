@@ -11,11 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y gtkmm-3.0 cairomm-1.0
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtkmm-3.0-dev libcairomm-1.0-dev
       - name: Build
         run: make
       - name: Archive vs_spredit
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: vs_spredit
           path: vs_spredit
