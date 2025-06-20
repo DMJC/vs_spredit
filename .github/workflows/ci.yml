@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ pkg-config libgtkmm-3.0-dev libcairomm-1.0-dev
+    - name: Build with Make
+      run: make build
+    - name: Run tests
+      run: |
+        if [ -f test.cpp ]; then
+          make test
+        else
+          echo "No tests";
+        fi
+
