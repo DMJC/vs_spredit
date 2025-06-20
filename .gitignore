@@ -1,0 +1,19 @@
+# Build outputs
+vs_spredit
+*.[oa]
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.class
+
+# Temporary files
+*~
+*.swp
+*.tmp
+*.log
+.DS_Store
+
+# Test binaries
+test
