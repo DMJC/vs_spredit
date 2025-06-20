@@ -203,10 +203,66 @@ public:
         show_all_children();
     }
 
-    void on_menu_file_open() { /* TODO */ }
-    void on_menu_file_save_spr() { /* TODO */ }
-    void on_menu_file_save_cpt() { /* TODO */ }
-    void on_menu_file_save_base() { /* TODO */ }
+    void on_menu_file_open() {
+        Gtk::FileChooserDialog dialog(*this, "Open", Gtk::FILE_CHOOSER_ACTION_OPEN);
+        dialog.add_button("Cancel", Gtk::RESPONSE_CANCEL);
+        dialog.add_button("Open", Gtk::RESPONSE_OK);
+
+        auto filter = Gtk::FileFilter::create();
+        filter->add_pattern("*.spr");
+        filter->add_pattern("*.ani");
+        filter->add_pattern("*.png");
+        filter->set_name("Sprite/PNG Files");
+        dialog.add_filter(filter);
+
+        if (dialog.run() == Gtk::RESPONSE_OK) {
+            auto filename = dialog.get_filename();
+            auto ext = fs::path(filename).extension().string();
+            if (ext == ".spr" || ext == ".ani") {
+                auto image = load_spr_file(filename, m_asset_root_dir);
+                if (image && !image->frames.empty()) {
+                    drawing_area.images.push_back(image);
+                    drawing_area.queue_draw();
+                    start_animation_timer();
+                }
+            } else {
+                try {
+                    auto pixbuf = Gdk::Pixbuf::create_from_file(filename);
+                    auto image = std::make_shared<ImageItem>();
+                    image->frames.push_back(pixbuf);
+                    drawing_area.images.push_back(image);
+                    drawing_area.queue_draw();
+                } catch (const Glib::Error& ex) {
+                    std::cerr << "Failed to load image: " << ex.what() << std::endl;
+                }
+            }
+        }
+    }
+
+    void save_current_sprite(const Glib::ustring& title) {
+        auto img = drawing_area.selected_image;
+        if (!img || img->frames.empty())
+            return;
+
+        Gtk::FileChooserDialog dialog(*this, title, Gtk::FILE_CHOOSER_ACTION_SAVE);
+        dialog.add_button("Cancel", Gtk::RESPONSE_CANCEL);
+        dialog.add_button("Save", Gtk::RESPONSE_OK);
+        dialog.set_do_overwrite_confirmation(true);
+
+        if (dialog.run() == Gtk::RESPONSE_OK) {
+            try {
+                auto pixbuf = img->get_frame(0);
+                if (pixbuf)
+                    pixbuf->save(dialog.get_filename(), "png");
+            } catch (const Glib::Error& ex) {
+                std::cerr << "Failed to save image: " << ex.what() << std::endl;
+            }
+        }
+    }
+
+    void on_menu_file_save_spr() { save_current_sprite("Save Sprite"); }
+    void on_menu_file_save_cpt() { save_current_sprite("Save Cockpit"); }
+    void on_menu_file_save_base() { save_current_sprite("Save Base"); }
     void on_menu_file_quit() { hide(); }
 
     void start_animation_timer() {
