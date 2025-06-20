@@ -275,18 +275,46 @@ public:
         }
 	}
 
+    bool try_parse_entry(const Gtk::Entry& entry, double& out) {
+        try {
+            out = std::stod(entry.get_text().raw());
+            return true;
+        } catch (...) {
+            return false;
+        }
+    }
+
+    void show_input_warning() {
+        Gtk::MessageDialog dialog(*this, "Invalid numeric input", false,
+                                  Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK, true);
+        dialog.set_secondary_text("Please enter valid numeric values.");
+        dialog.run();
+    }
+
     void on_input_changed() {
         auto img = drawing_area.selected_image;
         if (!img) return;
-            img->x = std::stod(x_entry.get_text());
-            img->y = std::stod(y_entry.get_text());
-			if (std::stod(xscale_entry.get_text()) == 0){ 
-				img->scale_x = 0.1; return;}
-			if (std::stod(yscale_entry.get_text()) == 0){ 
-				img->scale_y = 0.1; return;}
-           	img->scale_x = std::stod(xscale_entry.get_text());
-           	img->scale_y = std::stod(yscale_entry.get_text());
-           	drawing_area.queue_draw();
+
+        double new_x, new_y, new_sx, new_sy;
+
+        if (!try_parse_entry(x_entry, new_x) ||
+            !try_parse_entry(y_entry, new_y) ||
+            !try_parse_entry(xscale_entry, new_sx) ||
+            !try_parse_entry(yscale_entry, new_sy)) {
+            show_input_warning();
+            return;
+        }
+
+        if (new_sx == 0)
+            new_sx = 0.1;
+        if (new_sy == 0)
+            new_sy = 0.1;
+
+        img->x = new_x;
+        img->y = new_y;
+        img->scale_x = new_sx;
+        img->scale_y = new_sy;
+        drawing_area.queue_draw();
     }
 
     void on_image_selected() {
