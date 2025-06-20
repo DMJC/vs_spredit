@@ -1,5 +1,11 @@
 #include <filesystem> // C++17, but widely used with C++20
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <memory>
 #include "image_item.h"
 
 namespace fs = std::filesystem;
